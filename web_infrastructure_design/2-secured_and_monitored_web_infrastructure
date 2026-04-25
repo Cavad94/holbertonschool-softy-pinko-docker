@@ -1,0 +1,36 @@
+# 2. Secured and Monitored Web Infrastructure
+
+This design illustrates a secured and monitored three-server infrastructure for www.foobar.com.
+
+
+
+## New Elements and Their Purpose
+
+### 1. Firewalls (x3)
+Firewalls are added to protect each server by filtering incoming and outgoing network traffic. They act as a security barrier, allowing only legitimate traffic (like HTTP/HTTPS) and blocking unauthorized access attempts.
+
+### 2. SSL Certificate (HTTPS)
+An SSL certificate is installed to enable HTTPS (Hypertext Transfer Protocol Secure). This encrypts all data transmitted between the user's browser and the web server, ensuring data privacy and preventing Man-in-the-Middle (MITM) attacks.
+
+### 3. Monitoring Clients (x3)
+Monitoring clients are installed on all servers to collect system metrics (CPU usage, RAM, disk space, and application logs). This data is sent to a central monitoring service to provide real-time visibility into the infrastructure's health.
+
+## Infrastructure Specifics
+
+### Purpose of Firewalls
+Firewalls are used to define security rules that control network traffic. For example, they can be configured to only allow traffic on port 443 (HTTPS) and port 80 (HTTP), while blocking all other ports to reduce the attack surface.
+
+### Why HTTPS is Essential
+Serving traffic over HTTPS ensures that sensitive information, such as login credentials or personal data, is encrypted during transit. It also provides authentication to the user that they are communicating with the genuine server.
+
+### Role and Collection of Monitoring
+Monitoring is used to proactively detect issues before they lead to downtime. The monitoring tool (agent) collects data by periodically checking system resources and process logs, then pushes this information to a dashboard for analysis.
+
+### Monitoring Web Server QPS
+To monitor **Queries Per Second (QPS)**, the monitoring tool can be configured to analyze the web server (Nginx) access logs. By counting the number of HTTP requests recorded per second, the tool can graph the traffic intensity.
+
+## Identified Issues
+
+1.  **SSL Termination at Load Balancer:** Terminating SSL at the load balancer means that traffic between the load balancer and the application servers is sent over plain HTTP (unencrypted). If the internal network is compromised, an attacker could intercept this traffic.
+2.  **Single Write Database:** Having only one MySQL server capable of accepting write operations is still a Single Point of Failure (SPOF). If the primary node fails, the application cannot save or update any data.
+3.  **Unified Server Components:** Running the web server, application server, and database on the same machine means they all compete for the same CPU and RAM. A heavy database query could slow down the web server, causing performance degradation for the entire site.
