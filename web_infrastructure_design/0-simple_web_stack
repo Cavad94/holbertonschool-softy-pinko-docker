@@ -1,0 +1,38 @@
+# 0. Simple web stack infrastructure
+
+This design illustrates a one-server web infrastructure for the website reachable via www.foobar.com.
+
+## Design Diagram
+
+
+## Components
+
+### 1. The Server
+A server is a physical or virtual machine that provides functionality, resources, and services to other programs or devices, known as "clients".
+
+### 2. Domain Name (foobar.com)
+The domain name is a human-readable address used to identify a location on the internet. It acts as an alias for a numerical IP address, making it easier for users to access websites.
+
+### 3. DNS Record (www)
+The `www` record in `www.foobar.com` is an **A record** (Address record) because it maps a domain name directly to the IPv4 address (8.8.8.8) of the hosting server.
+
+### 4. Web Server (Nginx)
+Nginx is the web server responsible for handling incoming HTTP requests from the client's browser. It serves static content and acts as a reverse proxy, forwarding dynamic requests to the application server.
+
+### 5. Application Server
+The application server is responsible for executing the application's logic (backend code). It processes the requests received from the web server and interacts with the database.
+
+### 6. Application Files (Codebase)
+This is the collection of source code and assets that define how the website looks, behaves, and processes information.
+
+### 7. Database (MySQL)
+MySQL is the relational database management system used to store, organize, and manage persistent data such as user profiles, posts, and settings.
+
+### 8. Communication Protocol
+The server communicates with the user's computer using the **HTTP protocol** (Hypertext Transfer Protocol) over a **TCP/IP** network.
+
+## Identified Issues
+
+1.  **SPOF (Single Point of Failure):** Since all components (web server, app server, database) are on one server, if that server fails, the entire website goes offline.
+2.  **Downtime for Maintenance:** Whenever maintenance is required (e.g., updating code or restarting the web server), the website will be unreachable.
+3.  **Inability to Scale:** A single server has limited hardware resources (CPU, RAM). It cannot handle large spikes in traffic and cannot scale horizontally by adding more servers.
