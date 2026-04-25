@@ -1,0 +1,38 @@
+# 1. Distributed Web Infrastructure
+
+This design illustrates a distributed web infrastructure using three servers to host www.foobar.com.
+
+## Design Diagram
+
+
+## New Elements and Their Purpose
+
+### 1. Load Balancer (HAProxy)
+The load balancer is added to distribute incoming web traffic across multiple servers (Server 1 and Server 2). This ensures that no single server becomes a bottleneck and increases the availability of the application.
+
+### 2. Additional Server
+By adding a second server, we introduce redundancy. If one server goes down for maintenance or fails due to a crash, the other server can continue to serve the website, preventing total downtime.
+
+### 3. Database Primary-Replica Cluster
+This setup separates the database into a Primary (Master) node and a Replica (Slave) node. This allows the system to scale read operations and provides a backup of the data.
+
+## Infrastructure Specifics
+
+### Load Balancer Distribution Algorithm
+The load balancer is configured with the **Round Robin** algorithm. This algorithm works by rotating the requests between the available servers in a sequential order (e.g., first request to Server 1, second to Server 2, third back to Server 1).
+
+### Active-Active vs. Active-Passive
+- **Active-Active:** In this setup, the load balancer is enabling an Active-Active configuration, meaning both servers are actively receiving and processing traffic at the same time to balance the load.
+- **Active-Passive:** In an Active-Passive setup, only one server handles traffic while the other remains on standby. The passive server only becomes active if the primary server fails.
+
+### Database Primary-Replica Mechanism
+- **How it works:** All write operations (creating or updating data) are performed on the **Primary** node. These changes are then automatically synchronized to the **Replica** node.
+- **Application Difference:** The application sends all "Write" requests to the Primary node and sends "Read" requests to the Replica node to improve performance and efficiency.
+
+## Identified Issues
+
+1.  **SPOF (Single Point of Failure):** While we have multiple servers, the **Load Balancer** itself is a single point of failure. If HAProxy fails, the whole system becomes unreachable.
+2.  **Security Issues:**
+    - **No Firewall:** There is no firewall configured to block unauthorized traffic.
+    - **No HTTPS:** The traffic is sent over plain HTTP, meaning it is not encrypted and can be intercepted.
+3.  **No Monitoring:** There is no monitoring system to track the health of the servers or the services, making it hard to detect problems before they cause downtime.
